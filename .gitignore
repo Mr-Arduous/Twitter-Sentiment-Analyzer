@@ -1,0 +1,11 @@
+# Ignore Virtual Environment
+.env/
+
+# Ignore Python Cache
+__pycache__/
+
+# Ignore Massive Datasets (GitHub will block the push otherwise)
+*.csv
+
+# Ignore VS Code extension temp files
+tempCodeRunnerFile.py

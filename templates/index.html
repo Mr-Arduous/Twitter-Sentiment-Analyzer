@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Sentiment Analyzer</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #00ffcc;
+            
+            /* PURE CSS ANIMATED CYBER-GRID */
+            background-color: #050a0f; 
+            background-image: 
+                linear-gradient(rgba(0, 255, 204, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 204, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            animation: moveGrid 15s linear infinite; 
+        }
+
+        @keyframes moveGrid {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
+        }
+        
+        /* The Anime PC Terminal Window */
+        .container {
+            background: rgba(10, 15, 20, 0.95); 
+            border: 2px solid #00ffcc; 
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4), inset 0 0 15px rgba(0, 255, 204, 0.2);
+            padding: 40px;
+            border-radius: 5px; 
+            text-align: center;
+            width: 450px;
+            z-index: 10; 
+        }
+
+        h2 {
+            margin-top: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.8);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 3px;
+            border: 1px solid #00ffcc;
+            background: rgba(0, 30, 30, 0.6);
+            color: #00ffcc;
+            resize: none;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        textarea::placeholder {
+            color: rgba(0, 255, 204, 0.4);
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+        }
+        
+        button {
+            background: rgba(0, 255, 204, 0.2);
+            color: #00ffcc;
+            border: 1px solid #00ffcc;
+            padding: 12px 25px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+        
+        /* Results Box */
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed #00ffcc;
+            border-radius: 3px;
+        }
+        
+        .sentiment-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px currentColor;
+        }
+        
+        .positive { color: #39ff14; } 
+        .negative { color: #ff003c; } 
+        .neutral { color: #fdfd96; }  
+        
+        /* Progress Bars */
+        .math-section {
+            text-align: left;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .bar-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 8px 0 15px 0;
+            overflow: hidden;
+            height: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .bar-fill {
+            height: 100%;
+            transition: width 0.5s ease-in-out;
+            box-shadow: 0 0 10px currentColor;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>>> Sentiment Analyzer</h2>
+        <p style="color: rgba(0, 255, 204, 0.7); font-size: 14px; margin-top: -15px; margin-bottom: 25px;">
+            Type a tweet or phrase below to detect if the tone is Positive, Negative, or Neutral.
+        </p>
+        
+        <form method="POST">
+            <textarea name="tweet_text" placeholder="Enter input string..." required>{{ text }}</textarea><br>
+            <button type="submit">Execute Analysis</button>
+        </form>
+
+        {% if sentiment %}
+            <div class="result-box">
+                <div class="sentiment-text">
+                    [STATUS]: 
+                    <span class="{% if sentiment == 'Positive' %}positive{% elif sentiment == 'Negative' %}negative{% else %}neutral{% endif %}">
+                        {{ sentiment }}
+                    </span>
+                </div>
+                
+                <div class="math-section">
+                    <div>POS_CONFIDENCE ({{ pos_prob }}%)</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: {{ pos_prob }}%; background: #39ff14; color: #39ff14;"></div>
+                    </div>
+                    
+                    <div>NEG_CONFIDENCE ({{ neg_prob }}%)</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: {{ neg_prob }}%; background: #ff003c; color: #ff003c;"></div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
